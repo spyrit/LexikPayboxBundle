@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\PayboxBundle\Tests\Paybox\System;
 
 use Lexik\Bundle\PayboxBundle\Paybox\System\Base\Response;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -13,7 +14,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  *
  * @author Olivier Maisonneuve <o.maisonneuve@lexik.fr>
  */
-class ResponseTest extends \PHPUnit_Framework_TestCase
+class ResponseTest extends TestCase
 {
     /**
      * @var Response
@@ -26,7 +27,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
      */
     protected function initMock(array $parameters, array $messages)
     {
-        $request = $this->getMock('Symfony\Component\HttpFoundation\Request');
+        $request = $this->createMock('Symfony\Component\HttpFoundation\Request');
         $request
             ->expects($this->any())
             ->method('isMethod')
@@ -43,7 +44,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
             ->willReturn($request);
 
         /** @var LoggerInterface $logger */
-        $logger = $this->getMock('Psr\Log\LoggerInterface');
+        $logger = $this->createMock('Psr\Log\LoggerInterface');
         foreach ($messages as $i => $message) {
             $logger
                 ->expects($this->at($i))
@@ -68,7 +69,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->_response = new Response($requestStack, $logger, $dispatcher, $parameters);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->_response = null;
     }

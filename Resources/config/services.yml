@@ -2,32 +2,40 @@ parameters:
     lexik_paybox.request_handler.class:              'Lexik\Bundle\PayboxBundle\Paybox\System\Base\Request'
     lexik_paybox.request_cancellation_handler.class: 'Lexik\Bundle\PayboxBundle\Paybox\System\Cancellation\Request'
     lexik_paybox.response_handler.class:             'Lexik\Bundle\PayboxBundle\Paybox\System\Base\Response'
-    lexik_paybox.direc_plus.request_handler:         'Lexik\Bundle\PayboxBundle\Paybox\DirectPlus\Request'
+    lexik_paybox.direct_plus.request_handler:        'Lexik\Bundle\PayboxBundle\Paybox\DirectPlus\Request'
 
 services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Lexik\Bundle\PayboxBundle\Controller\:
+        resource: '../../Controller'
+        calls:
+            - setContainer: [ '@service_container' ]
+        tags: [ 'controller.service_arguments' ]
     lexik_paybox.request_handler:
         class:     '%lexik_paybox.request_handler.class%'
-        public:    true
         arguments: ['%lexik_paybox.parameters%', '%lexik_paybox.servers%', '@form.factory']
 
     lexik_paybox.request_cancellation_handler:
         class:     '%lexik_paybox.request_cancellation_handler.class%'
-        public:    true
         arguments: ['%lexik_paybox.parameters%', '%lexik_paybox.servers%', '@lexik_paybox.transport']
 
     lexik_paybox.response_handler:
         class:     '%lexik_paybox.response_handler.class%'
-        public:    true
         arguments: ['@request_stack', '@logger', '@event_dispatcher', '%lexik_paybox.parameters%']
         tags:
             - { name: monolog.logger, channel: payment }
 
-    lexik_paybox.direc_plus.request_handler:
-        class:     '%lexik_paybox.direc_plus.request_handler%'
-        public:    true
+    lexik_paybox.direct_plus.request_handler:
+        class:     '%lexik_paybox.direct_plus.request_handler%'
         arguments: ['%lexik_paybox.parameters%', '%lexik_paybox.servers%', '@logger', '@event_dispatcher', '@lexik_paybox.transport']
         tags:
             - { name: monolog.logger, channel: payment }
 
     lexik_paybox.transport:
         class:     '%lexik_paybox.transport.class%'
+
+    Lexik\Bundle\PayboxBundle\Paybox\System\Base\Request: '@lexik_paybox.request_handler'
+    Lexik\Bundle\PayboxBundle\Paybox\System\Base\Response: '@lexik_paybox.response_handler'

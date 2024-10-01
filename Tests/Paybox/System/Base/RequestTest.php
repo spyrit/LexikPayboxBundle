@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\PayboxBundle\Tests\Paybox\System;
 
 use Lexik\Bundle\PayboxBundle\Paybox\System\Base\Request;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class RequestTest
@@ -11,7 +12,7 @@ use Lexik\Bundle\PayboxBundle\Paybox\System\Base\Request;
  *
  * @author Olivier Maisonneuve <o.maisonneuve@lexik.fr>
  */
-class RequestTest extends \PHPUnit_Framework_TestCase
+class RequestTest extends TestCase
 {
     /**
      * @var Request
@@ -98,7 +99,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $formFactory = $this->getMock('Symfony\Component\Form\FormFactoryInterface');
+        $formFactory = $this->createMock('Symfony\Component\Form\FormFactoryInterface');
 
         $this->_paybox = new Request(array(
             'production' => false,
@@ -148,7 +149,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->_paybox->setParameter('PBX_TOTAL',   '100');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->_paybox = null;
     }

@@ -179,7 +179,7 @@ class Response
         openssl_free_key($publicKey);
 
         $event = new PayboxResponseEvent($this->data, $result);
-        $this->dispatcher->dispatch(PayboxEvents::PAYBOX_IPN_RESPONSE, $event);
+        $this->dispatcher->dispatch($event, PayboxEvents::PAYBOX_IPN_RESPONSE);
 
         return $result;
     }

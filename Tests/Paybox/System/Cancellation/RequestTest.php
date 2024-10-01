@@ -10,7 +10,7 @@ use Lexik\Bundle\PayboxBundle\Transport\CurlTransport;
  *
  * @author Fabien Pomerol <fabien.pomerol@gmail.com>
  */
-class RequestTest extends \PHPUnit_Framework_TestCase
+class RequestTest extends TestCase
 {
     private $_paybox;
 

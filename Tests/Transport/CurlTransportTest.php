@@ -5,11 +5,12 @@ namespace Lexik\Bundle\PayboxBundle\Tests\Transport;
 use Lexik\Bundle\PayboxBundle\Paybox\RequestInterface;
 use Lexik\Bundle\PayboxBundle\Paybox\System\Cancellation\Request;
 use Lexik\Bundle\PayboxBundle\Transport\CurlTransport;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for CurlTransport
  */
-class CurlTransportTest extends \PHPUnit_Framework_TestCase
+class CurlTransportTest extends TestCase
 {
     protected $object;
 

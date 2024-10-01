@@ -2,7 +2,9 @@
 
 namespace Lexik\Bundle\PayboxBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Lexik\Bundle\PayboxBundle\Paybox\System\Base\Request as PayboxRequest;
+use Lexik\Bundle\PayboxBundle\Paybox\System\Base\Response as PayboxResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -15,17 +17,17 @@ use Symfony\Component\Routing\Generator\UrlGenerator;
  * @author Lexik <dev@lexik.fr>
  * @author Olivier Maisonneuve <o.maisonneuve@lexik.fr>
  */
-class SampleController extends Controller
+class SampleController extends AbstractController
 {
     /**
      * Index action creates the form for a payment call.
      *
      * @return Response
      */
-    public function indexAction()
+    public function index(PayboxRequest $payboxRequest)
     {
         $paybox = $this->get('lexik_paybox.request_handler');
-        $paybox->setParameters(array(
+        $payboxRequest->setParameters([
             'PBX_CMD'          => 'CMD'.time(),
             'PBX_DEVISE'       => '978',
             'PBX_PORTEUR'      => 'test@paybox.com',
@@ -38,13 +40,13 @@ class SampleController extends Controller
             'PBX_ANNULE'       => $this->generateUrl('lexik_paybox_sample_return', array('status' => 'canceled'), UrlGenerator::ABSOLUTE_URL),
             'PBX_RUF1'         => 'POST',
             'PBX_REPONDRE_A'   => $this->generateUrl('lexik_paybox_ipn', array('time' => time()), UrlGenerator::ABSOLUTE_URL),
-        ));
+        ]);
 
         return $this->render(
-            'LexikPayboxBundle:Sample:index.html.twig',
+            '@LexikPaybox/Sample/index.html.twig',
             array(
-                'url'  => $paybox->getUrl(),
-                'form' => $paybox->getForm()->createView(),
+                'url'  => $payboxRequest->getUrl(),
+                'form' => $payboxRequest->getForm()->createView(),
             )
         );
     }
@@ -59,11 +61,11 @@ class SampleController extends Controller
      *
      * @return Response
      */
-    public function returnAction(Request $request, $status)
+    public function return(Request $request, $status)
     {
-        return $this->render('LexikPayboxBundle:Sample:return.html.twig', array(
+        return $this->render('@LexikPaybox/Sample/return.html.twig', [
             'status'     => $status,
             'parameters' => $request->query,
-        ));
+        ]);
     }
 }

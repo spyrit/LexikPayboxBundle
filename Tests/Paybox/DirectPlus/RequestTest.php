@@ -5,6 +5,7 @@ namespace Lexik\Bundle\PayboxBundle\Tests\Paybox\DirectPlus;
 use Lexik\Bundle\PayboxBundle\Paybox\DirectPlus\Request;
 use Lexik\Bundle\PayboxBundle\Transport\BuzzTransport;
 use Lexik\Bundle\PayboxBundle\Transport\CurlTransport;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class RequestTest
@@ -62,16 +63,16 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $logger = $this->getMock('Psr\Log\LoggerInterface');
+        $logger = $this->createMock('Psr\Log\LoggerInterface');
         foreach ($messages as $i => $message) {
             $logger
                 ->expects($this->at($i))
                 ->method($message[0])
-                ->with(new \PHPUnit_Framework_Constraint_StringMatches($message[1]))
+                ->with($this->equalTo($message[1]))
             ;
         }
 
-        $dispatcher = $this->getMock('Symfony\Component\EventDispatcher\EventDispatcher');
+        $dispatcher = $this->createMock('Symfony\Component\EventDispatcher\EventDispatcher');
         if (true === $dispatch) {
             $dispatcher
                 ->expects($this->once())
@@ -84,7 +85,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             $transport
                 ->expects($this->once())
                 ->method('call')
-                ->will($this->returnValue($httpResponse))
+                ->willReturn($httpResponse)
             ;
         }
 
@@ -97,7 +98,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->request = new Request($parameters, $servers, $logger, $dispatcher, $transport);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->request = null;
     }
@@ -109,8 +110,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $parameters = array(
             'VERSION'     => '00104',
             'TYPE'        => '00056',
-            'NUMQUESTION' => '194102422',
-            'MONTANT'     => '1000',
+            'NUMQUESTION' => '0194102422',
+            'MONTANT'     => '0000001000',
             'DEVISE'      => '978',
             'REFERENCE'   => 'TestPaybox',
             'porteur'     => '1111222233334444',
@@ -118,7 +119,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             'cvv'         => '222',
             'REFABONNE'   => 'ABODOCUMENTATION001',
             'ACTIVITE'    => '027',
-            'DATEQ'       => '30012013',
+            'DATEQ'       => '00000030012013',
         );
 
         $this->request->setParameters($parameters);

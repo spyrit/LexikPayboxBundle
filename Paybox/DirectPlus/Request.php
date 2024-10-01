@@ -141,7 +141,7 @@ class Request extends AbstractRequest
                 $verified = ('00000' === $result['CODEREPONSE']) && !empty($result['NUMTRANS']) && !empty($result['NUMAPPEL']);
 
                 $event = new PayboxResponseEvent($result, $verified);
-                $this->dispatcher->dispatch(PayboxEvents::PAYBOX_API_RESPONSE, $event);
+                $this->dispatcher->dispatch($event, PayboxEvents::PAYBOX_API_RESPONSE);
 
                 return $result;
             } else {
